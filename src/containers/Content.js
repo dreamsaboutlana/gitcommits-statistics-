@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar } from 'recharts';
 
 import * as contributorActions from '../actions/contributorActions';
+import { Graph } from '../components/Graph';
 
 class Content extends Component {
   constructor(props) {
@@ -11,48 +11,66 @@ class Content extends Component {
   }
 
   componentWillMount() {
-    const { author, repo } = this.props.match.params;
-    const { fetchStatistic, fetchActivity, fetchStatisticForYear } = this.props.contributorActions;
-
-    // fetchStatistic(author);
+    const { repo } = this.props.match.params;
+    const { fetchActivity } = this.props.contributorActions;
     fetchActivity(repo);
-    fetchStatisticForYear();
   }
+
+  parseContributorCommits = (contributors, author) => {
+    const getAuthorData = contributors.filter(item => item.author.login === author)[0];
+    let getWeeksData = [];
+    if (getAuthorData && getAuthorData.weeks) {
+      getWeeksData = getAuthorData.weeks.filter(item => {
+        const timestamp = new Date(0);
+        timestamp.setUTCSeconds(item.w);
+        if (timestamp.getFullYear() === new Date().getFullYear() - 1) {
+          return {
+            month: item.w,
+            commits: item.c
+          };
+        }
+      });
+    }
+    return getWeeksData;
+  };
+
+  getMonth = (month) => {
+    const utcSeconds = month;
+    const timestamp = new Date(0);
+    timestamp.setUTCSeconds(utcSeconds);
+    return timestamp.getMonth() + 1;
+  };
+
+
+  createYearData = (arr) => {
+    let checkedMonth = null;
+    const outputData = arr.map((item) => {
+      if (this.getMonth(item.w) != checkedMonth) {
+        checkedMonth = this.getMonth(item.w);
+        let summOfCommits = 0;
+        arr.filter((item) => {
+          if (this.getMonth(item.w) === checkedMonth) {
+            summOfCommits += item.c;
+          }
+        });
+        return {
+          month: checkedMonth,
+          commits: summOfCommits,
+          amt: 2400
+        };
+      }
+    });
+    return (outputData.filter((k) => {
+      return k;
+    }));
+  };
 
   render() {
     const { contributors } = this.props;
-    const { commits } = this.props;
     const { author } = this.props.match.params;
-
-    console.log(author);
-    const parseContributorCommits = () => {
-      const getAuthorData = commits.filter(item => item.author.login === author);
-
-      console.log(getAuthorData);
-      let getWeeksData = [];
-      if (getAuthorData && getAuthorData.weeks) {
-        getWeeksData = getAuthorData.weeks.map((item, idx) => {
-          const timestamp = new Date(item.w);
-          return {
-            week: timestamp.toLocaleString(),
-            commits: item.c,
-            amt: 2400
-          };
-        });
-      }
-      return getWeeksData;
-    };
-
     return (
       <div>
-        <BarChart width={730} height={250} data={parseContributorCommits()}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="week" />
-          <YAxis dataKey="commits" />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="commits" fill="#8884d8" />
-        </BarChart>
+        <Graph data={this.createYearData(this.parseContributorCommits(contributors, author))} />
       </div>
     );
   }
@@ -60,9 +78,7 @@ class Content extends Component {
 
 function mapStateToProps(state) {
   return {
-    author: state.contributor.info,
-    contributors: state.contributor.contributors,
-    commits: state.contributor.commits
+    contributors: state.contributor.contributors
   };
 }
 
