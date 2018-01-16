@@ -62,3 +62,4 @@ typings/
 .idea/vcs.xml
 dist/
 package-lock.json
+yarn.lock
