@@ -1,9 +1,7 @@
 import * as constant from '../actions/constants';
 
 export default function reducer(state = {
-  info: {},
-  contributors: [],
-  commits: []
+  contributors: []
 }, action) {
   switch (action.type) {
     case constant.FETCH_ACTIVITY: {

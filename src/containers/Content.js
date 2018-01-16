@@ -6,9 +6,6 @@ import * as contributorActions from '../actions/contributorActions';
 import { Graph } from '../components/Graph';
 
 class Content extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   componentWillMount() {
     const { repo } = this.props.match.params;
@@ -34,7 +31,7 @@ class Content extends Component {
     return getWeeksData;
   };
 
-  getMonth = (month) => {
+  getMonth = month => {
     const utcSeconds = month;
     const timestamp = new Date(0);
     timestamp.setUTCSeconds(utcSeconds);
@@ -44,11 +41,11 @@ class Content extends Component {
 
   createYearData = (arr) => {
     let checkedMonth = null;
-    const outputData = arr.map((item) => {
+    const outputData = arr.map(item => {
       if (this.getMonth(item.w) != checkedMonth) {
         checkedMonth = this.getMonth(item.w);
         let summOfCommits = 0;
-        arr.filter((item) => {
+        arr.filter(item => {
           if (this.getMonth(item.w) === checkedMonth) {
             summOfCommits += item.c;
           }

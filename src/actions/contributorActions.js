@@ -18,10 +18,7 @@ export function fetchActivity(repoName = 'react') {
         url = 'https://api.github.com/repos/angular/angular/stats/contributors';
         break;
       }
-      case 'vue': {
-        url = 'https://api.github.com/repos/facebook/react/stats/contributors';
-        break;
-      }
+
       default:
         url = 'https://api.github.com/repos/facebook/react/stats/contributors';
     }
