@@ -35,12 +35,25 @@ class Content extends Component {
     const utcSeconds = month;
     const timestamp = new Date(0);
     timestamp.setUTCSeconds(utcSeconds);
-    return timestamp.getMonth() + 1;
+    return timestamp.getMonth();
   };
 
 
   createYearData = (arr) => {
     let checkedMonth = null;
+    const monthNameList = [
+      'Jan.',
+      'Feb.',
+      'Mar.',
+      'Apr.',
+      'May',
+      'June',
+      'July',
+      'Aug.',
+      'Sept.',
+      'Oct.',
+      'Nov.',
+      'Dec.'];
     const outputData = arr.map(item => {
       if (this.getMonth(item.w) != checkedMonth) {
         checkedMonth = this.getMonth(item.w);
@@ -51,7 +64,7 @@ class Content extends Component {
           }
         });
         return {
-          month: checkedMonth,
+          month: monthNameList[checkedMonth],
           commits: summOfCommits,
           amt: 2400
         };
