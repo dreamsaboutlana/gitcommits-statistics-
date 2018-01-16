@@ -1,8 +1,9 @@
 * {
   box-sizing: border-box;
-
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
-html{
+
+html {
   height: 100%;
 }
 
@@ -21,13 +22,16 @@ body {
 
 }
 
-.wrap{
+.wrap {
   display: flex;
+  flex-direction: row;
 }
+
 aside {
   width: 30%;
-  background: lightblue;
+  background: #add8e647;
   padding: 20px;
+  border-radius: 5px;
 
   h3 {
     text-align: center;
@@ -37,8 +41,37 @@ aside {
     height: 40px;
     font-size: 16px;
   }
+  .top-contributor {
+    ul {
+      padding: 0;
+      list-style: none;
+      a {
+        text-decoration: none;
+        font-style: italic;
+        color: #484343;
+        font-weight: 700;
+        line-height: 24px;
+
+        &:hover {
+          color: #507ace;
+        }
+
+      }
+    }
+  }
 }
-main{
+
+main {
   width: 70%;
   padding: 20px;
+}
+
+@media (max-width: 900px) {
+  .wrap {
+    flex-direction: column;
+  }
+  aside,
+  main {
+    width: 100%;
+  }
 }
